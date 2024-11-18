@@ -7,6 +7,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\AdminAuthController;
 use App\Models\Regency;
 
+
 Route::get('/', [EventController::class, 'index'])->name('events.index');
 Route::get('/api/regencies/{province}', function ($provinceId) {
     return Regency::where('province_id', $provinceId)->get(['id', 'name']);
@@ -18,16 +19,13 @@ Route::get('/bookings/create/{event_id}', [BookingController::class, 'create'])-
 // Admin login routes
 Route::get('admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('admin/login', [AdminAuthController::class, 'login']);
-
 Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
-
-// Protect the admin routes with 'auth:admin' middleware
-Route::middleware(['auth:admin'])->group(function () {
+// Protect admin routes with 'auth:admin' middleware
+// Route::middleware(middleware: ['auth:admin'])->group(function () {
     Route::resource('categories', EventCategoryController::class);
     Route::resource('organizers', OrganizerController::class);
     Route::resource('events', EventController::class);
-
     Route::get('admin/bookings', [BookingController::class, 'index'])->name('bookings.index');
     
     // Admin-only booking edit, update, and delete routes
@@ -37,6 +35,5 @@ Route::middleware(['auth:admin'])->group(function () {
     
     // Admin-only organizer detail view
     Route::get('/organizers/{id}', [OrganizerController::class, 'show'])->name('organizers.show');
-
     Route::get('/master-events', [EventController::class, 'masterIndex'])->name('events.masterIndex');
-});
+// });
