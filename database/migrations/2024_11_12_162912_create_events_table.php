@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->integer('price')->default(0);
             $table->string('status')->default('available');
+            $table->string('status_mulai')->default('upcoming');
             $table->foreignId('province_id')->constrained('provinces')->onDelete('cascade');
             $table->foreignId('regency_id')->constrained('regencies')->onDelete('cascade');
             $table->foreignId('organizer_id')->constrained('organizers')->onDelete('cascade');

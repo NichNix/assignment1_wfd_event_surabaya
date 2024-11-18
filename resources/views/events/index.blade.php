@@ -48,7 +48,7 @@
         <div class="col-lg-4 col-md-6 mb-4">
             <div class="event-box">
                 <div class="p-3">
-                    <h3 class="event-title">{{ $event->title }}</h3>
+                    <h3 class="event-title">{{ $event->title}} || {{ $event->status }}</h3>
                     <p class="event-location">
                         <i class="fas fa-map-marker-alt"></i> {{ $event->venue }}, {{ $event->regency->name }}, {{ $event->province->name }}
                     </p>

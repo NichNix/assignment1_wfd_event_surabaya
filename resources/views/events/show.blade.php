@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container mt-5">
-    <h2 class="text-center mb-4">{{ $event->title }}</h2>
+    <h2 class="text-center mb-4">{{ $event->title }} || {{ $event->status }} </h2>
     <div class="row g-4 align-items-center">
         <!-- Image Section -->
         <div class="col-md-6">
@@ -74,11 +74,13 @@
                         @endif
                 </p>
 
-                @if($event->status == 'available' && $event->sold_tickets < $event->max_tickets)
+                @if($event->status != 'Selesai' && $event->status != 'Sedang berlangsung' && $event->sold_tickets < $event->max_tickets)
                     <a href="{{ route('bookings.create', ['event_id' => $event->id]) }}" class="btn btn-primary w-100">Book Now</a>
                     @else
                     <button class="btn btn-secondary w-100" disabled>No Booking Available</button>
                     @endif
+
+
 
 
             </div>
