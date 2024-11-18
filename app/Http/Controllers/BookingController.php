@@ -56,7 +56,7 @@ class BookingController extends Controller
         $event->save();
 
         // Redirect with a success message
-        return redirect()->route('events.show', ['id' => $event->id])->with('success', 'Booking successful!');
+        return redirect()->route('events.show', $validated['id_event'])->with('success', 'Booking successful!');
     }
 
     public function __construct()

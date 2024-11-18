@@ -11,7 +11,7 @@ Route::get('/', [EventController::class, 'index'])->name('events.index');
 Route::get('/api/regencies/{province}', function ($provinceId) {
     return Regency::where('province_id', $provinceId)->get(['id', 'name']);
 });
-Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
+Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
 Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
 Route::get('/bookings/create/{event_id}', [BookingController::class, 'create'])->name('bookings.create');
 
