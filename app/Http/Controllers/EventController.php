@@ -12,6 +12,10 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('prevent.cache'); // Apply the prevent cache middleware
+    }
 
     public function index(Request $request)
     {
@@ -72,6 +76,7 @@ class EventController extends Controller
             'venue' => 'required|string|max:255',
             'date' => 'required|date',
             'start_time' => 'required',
+            'end_time' => 'required',
             'organizer_id' => 'required|exists:organizers,id',
             'event_category_id' => 'required|exists:event_categories,id',
             'province_id' => 'required|exists:provinces,id',
@@ -98,6 +103,7 @@ class EventController extends Controller
             'venue' => $validated['venue'],
             'date' => $validated['date'],
             'start_time' => $validated['start_time'],
+            'end_time' => $validated['end_time'],
             'description' => $validated['description'],
             'booking_url' => $validated['booking_url'],
             'max_tickets' => $validated['max_tickets'],
@@ -138,6 +144,7 @@ class EventController extends Controller
         'venue' => 'required|string|max:255',
         'date' => 'required|date',
         'start_time' => 'required',
+        'end_time' => 'required',
         'organizer_id' => 'required|exists:organizers,id',
         'event_category_id' => 'required|exists:event_categories,id',
         'province_id' => 'required|exists:provinces,id',
@@ -164,6 +171,7 @@ class EventController extends Controller
     $event->venue = $request->input('venue');
     $event->date = $request->input('date');
     $event->start_time = $request->input('start_time');
+    $event->end_time = $request->input('end_time');
     $event->organizer_id = $request->input('organizer_id');
     $event->event_category_id = $request->input('event_category_id');
     $event->province_id = $request->input('province_id');

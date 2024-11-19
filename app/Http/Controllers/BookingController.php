@@ -63,6 +63,7 @@ class BookingController extends Controller
     {
         // Only allow authenticated admins to access these methods
         $this->middleware('auth:admin')->only(['edit', 'update']);
+        $this->middleware('prevent.cache'); // Apply the prevent cache middleware
     }
 
     public function edit($id)

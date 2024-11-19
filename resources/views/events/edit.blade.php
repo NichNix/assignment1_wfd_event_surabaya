@@ -59,6 +59,11 @@
     </div>
 
     <div class="mb-3">
+        <label for="end_time" class="form-label">End Time</label>
+        <input type="time" class="form-control" name="end_time" value="{{ old('end_time', $event->end_time) }}" required>
+    </div>
+
+    <div class="mb-3">
         <label for="description" class="form-label">About the Event</label>
         <textarea class="form-control" name="description" rows="4">{{ old('description', $event->description) }}</textarea>
     </div>

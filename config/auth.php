@@ -19,20 +19,29 @@ return [
     ],
 
     'guards' => [
-        // Other guards
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
     
         'admin' => [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+    
+        // Other guards...
     ],
     
+    
     'providers' => [
-        // Other providers
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
     
         'admins' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Admin::class, // Make sure this points to the Admin model
+            'model' => App\Models\Admin::class,  // Ensure this is your Admin model
         ],
     ],
     

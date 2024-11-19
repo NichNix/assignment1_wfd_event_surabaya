@@ -59,48 +59,88 @@ class Event extends Model
     // Getter untuk status event
     public function getStatusAttribute()
     {
-        $now = Carbon::now();
-        $startDateTime = Carbon::parse($this->date . ' ' . $this->start_time);
-
-        // If event has not started yet
-        if ($now->isBefore($startDateTime)) {
-            $diffInDays = $now->diffInDays($startDateTime);
-            $diffInHours = $now->diffInHours($startDateTime);
-            $diffInMinutes = $now->diffInMinutes($startDateTime);
-            $diffInSeconds = $now->diffInSeconds($startDateTime);
-
-            // Return remaining days, hours, minutes or seconds
-            if ($diffInDays > 0) {
-                return "$diffInDays hari lagi";
-            } else {
-                $remainingHours = $diffInHours;
-                $remainingMinutes = $diffInMinutes - ($remainingHours * 60);
-                $remainingSeconds = $diffInSeconds - ($remainingMinutes * 60 + $remainingHours * 3600);
-
-                $timeString = "";
-
-                if ($remainingHours > 0) {
-                    $timeString .= "$remainingHours jam ";
-                }
-                if ($remainingMinutes > 0) {
-                    $timeString .= "$remainingMinutes menit ";
-                }
-                if ($remainingSeconds > 0) {
-                    $timeString .= "$remainingSeconds detik ";
-                }
-
-                return $timeString . "lagi";
+        // Ensure the timezone is correct (set to Asia/Jakarta)
+        $now = Carbon::now('Asia/Jakarta');  // Current time in Asia/Jakarta timezone
+        $startDateTime = Carbon::parse($this->date . ' ' . $this->start_time, 'Asia/Jakarta');  // Event start time in Asia/Jakarta timezone
+    
+        // Check if end_time is set, otherwise, return default status
+        if (empty($this->end_time)) {
+            // If no end_time is provided, fallback to only checking the start time
+            if ($now->isBefore($startDateTime)) {
+                return 'Event belum dimulai';
+            } elseif ($now->isAfter($startDateTime)) {
+                return 'Sedang berlangsung';
             }
         }
-
-        // Event has finished (1 day after start time)
-        elseif ($now->isAfter($startDateTime->addDay())) {
-            return 'Selesai';
+    
+        // Event end time (assuming end_time is set)
+        $endDateTime = Carbon::parse($this->date . ' ' . $this->end_time, 'Asia/Jakarta');  // Event end time in Asia/Jakarta timezone
+    
+        // If event has not started yet
+        if ($now->isBefore($startDateTime)) {
+            // Get the difference in seconds between now and the event start time
+            $diffInSeconds = $now->diffInSeconds($startDateTime);
+    
+            // Calculate the difference in days, hours, minutes, and seconds
+            $diffInDays = floor($diffInSeconds / (24 * 3600));  // Days
+            $diffInSeconds %= (24 * 3600);  // Remaining seconds after full days
+            $diffInHours = floor($diffInSeconds / 3600);  // Hours
+            $diffInSeconds %= 3600;  // Remaining seconds after full hours
+            $diffInMinutes = floor($diffInSeconds / 60);  // Minutes
+            $diffInSeconds %= 60;  // Remaining seconds
+    
+            // Return the remaining time as days, hours, minutes, and seconds
+            $timeString = '';
+            if ($diffInDays > 0) {
+                $timeString .= "$diffInDays hari ";
+            }
+            if ($diffInHours > 0) {
+                $timeString .= "$diffInHours jam ";
+            }
+            if ($diffInMinutes > 0) {
+                $timeString .= "$diffInMinutes menit ";
+            }
+            if ($diffInSeconds > 0) {
+                $timeString .= "$diffInSeconds detik ";
+            }
+    
+            return $timeString . "lagi"; // Countdown until event starts
         }
-
-        // Event is ongoing
+    
+        // Event is ongoing (between start and end time)
+        elseif ($now->isBetween($startDateTime, $endDateTime)) {
+            // Get the difference in seconds between now and the event end time
+            $diffInSeconds = $now->diffInSeconds($endDateTime);
+    
+            // Calculate the difference in days, hours, minutes, and seconds
+            $diffInDays = floor($diffInSeconds / (24 * 3600));  // Days
+            $diffInSeconds %= (24 * 3600);  // Remaining seconds after full days
+            $diffInHours = floor($diffInSeconds / 3600);  // Hours
+            $diffInSeconds %= 3600;  // Remaining seconds after full hours
+            $diffInMinutes = floor($diffInSeconds / 60);  // Minutes
+            $diffInSeconds %= 60;  // Remaining seconds
+    
+            // Return the remaining time until the event finishes
+            $timeString = '';
+            if ($diffInDays > 0) {
+                $timeString .= "$diffInDays hari ";
+            }
+            if ($diffInHours > 0) {
+                $timeString .= "$diffInHours jam ";
+            }
+            if ($diffInMinutes > 0) {
+                $timeString .= "$diffInMinutes menit ";
+            }
+            if ($diffInSeconds > 0) {
+                $timeString .= "$diffInSeconds detik ";
+            }
+    
+            return 'Sedang berlangsung - ' . $timeString . "lagi"; // Ongoing event and countdown until it finishes
+        }
+    
+        // Event has finished (after the event end time)
         else {
-            return 'Sedang berlangsung';
+            return 'Selesai'; // Event finished
         }
-    }
+    }    
 }

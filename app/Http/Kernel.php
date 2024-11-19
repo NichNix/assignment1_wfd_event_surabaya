@@ -69,7 +69,8 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         // other middleware
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
-        'Loggedin' => \App\Http\Middleware\Loggedin::class,
+        'prevent.cache' => \App\Http\Middleware\PreventCache::class,
+        'auth.admin' => \App\Http\Middleware\RedirectIfAuthenticatedAdmin::class,
     ];
     
 }
