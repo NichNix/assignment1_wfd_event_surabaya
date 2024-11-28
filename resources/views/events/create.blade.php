@@ -56,7 +56,7 @@
             <div class="mb-3">
                 <label for="category_id" class="block text-gray-700 font-bold mb-2">Category</label>
                 <select name="category_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                    @foreach($categories as $category)
+                    @foreach($eventCategories as $category)
                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                     @endforeach
                 </select>
