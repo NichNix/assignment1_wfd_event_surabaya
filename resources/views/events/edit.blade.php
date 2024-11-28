@@ -17,7 +17,7 @@
 
     <h2 class="text-2xl font-bold mb-4">Edit Event</h2>
 
-    <form action="{{ route('events.update', $event->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('events.update', $event->id) }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
         @csrf
         @method('PUT')
 
@@ -123,7 +123,7 @@
             </select>
         </div>
 
-        <div class="flex justify-between">
+        <div class="md:col-span-2 flex justify-between">
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Update Event</button>
             <a href="{{ route('events.masterIndex') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Cancel</a>
         </div>
