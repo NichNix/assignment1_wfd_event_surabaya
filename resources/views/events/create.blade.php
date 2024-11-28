@@ -19,85 +19,87 @@
 
         <form action="{{ route('events.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="mb-3">
-                <label for="title" class="block text-gray-700 font-bold mb-2">Event Name</label>
-                <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="title" required>
-            </div>
+            <div class="md:grid md:grid-cols-2 md:gap-6">
+                <div class="mb-3">
+                    <label for="title" class="block text-gray-700 font-bold mb-2">Event Name</label>
+                    <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="title" required>
+                </div>
 
-            <div class="mb-3">
-                <label for="date" class="block text-gray-700 font-bold mb-2">Date</label>
-                <input type="date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="date" required>
-            </div>
+                <div class="mb-3">
+                    <label for="date" class="block text-gray-700 font-bold mb-2">Date</label>
+                    <input type="date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="date" required>
+                </div>
 
-            <div class="mb-3">
-                <label for="start_time" class="block text-gray-700 font-bold mb-2">Start Time</label>
-                <input type="time" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="start_time" required>
-            </div>
+                <div class="mb-3">
+                    <label for="start_time" class="block text-gray-700 font-bold mb-2">Start Time</label>
+                    <input type="time" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="start_time" required>
+                </div>
 
-            <div class="mb-3">
-                <label for="venue" class="block text-gray-700 font-bold mb-2">Location</label>
-                <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="venue" required>
-            </div>
+                <div class="mb-3">
+                    <label for="venue" class="block text-gray-700 font-bold mb-2">Location</label>
+                    <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="venue" required>
+                </div>
 
-            <div class="mb-3">
-                <label for="description" class="block text-gray-700 font-bold mb-2">Description</label>
-                <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="description" rows="5" required></textarea>
-            </div>
+                <div class="mb-3">
+                    <label for="description" class="block text-gray-700 font-bold mb-2">Description</label>
+                    <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="description" rows="5" required></textarea>
+                </div>
 
-            <div class="mb-3">
-                <label for="organizer_id" class="block text-gray-700 font-bold mb-2">Organizer</label>
-                <select name="organizer_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                    @foreach($organizers as $organizer)
-                        <option value="{{ $organizer->id }}">{{ $organizer->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+                <div class="mb-3">
+                    <label for="organizer_id" class="block text-gray-700 font-bold mb-2">Organizer</label>
+                    <select name="organizer_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        @foreach($organizers as $organizer)
+                            <option value="{{ $organizer->id }}">{{ $organizer->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <div class="mb-3">
-                <label for="category_id" class="block text-gray-700 font-bold mb-2">Category</label>
-                <select name="category_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                    @foreach($eventCategories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+                <div class="mb-3">
+                    <label for="category_id" class="block text-gray-700 font-bold mb-2">Category</label>
+                    <select name="category_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        @foreach($eventCategories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <div class="mb-3">
-                <label for="tags" class="block text-gray-700 font-bold mb-2">Tags</label>
-                <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="tags" required>
-            </div>
+                <div class="mb-3">
+                    <label for="tags" class="block text-gray-700 font-bold mb-2">Tags</label>
+                    <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="tags" required>
+                </div>
 
-            <div class="mb-3">
-                <label for="image" class="block text-gray-700 font-bold mb-2">Image</label>
-                <input type="file" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="image" required>
-            </div>
+                <div class="mb-3">
+                    <label for="image" class="block text-gray-700 font-bold mb-2">Image</label>
+                    <input type="file" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="image" required>
+                </div>
 
-            <div class="mb-3">
-                <label for="price" class="block text-gray-700 font-bold mb-2">Price</label>
-                <input type="number" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="price" required>
-            </div>
+                <div class="mb-3">
+                    <label for="price" class="block text-gray-700 font-bold mb-2">Price</label>
+                    <input type="number" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="price" required>
+                </div>
 
-            <div class="mb-3">
-                <label for="max_tickets" class="block text-gray-700 font-bold mb-2">Max Tickets</label>
-                <input type="number" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="max_tickets" required>
-            </div>
+                <div class="mb-3">
+                    <label for="max_tickets" class="block text-gray-700 font-bold mb-2">Max Tickets</label>
+                    <input type="number" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="max_tickets" required>
+                </div>
 
-            <div class="mb-3">
-                <label for="province_id" class="block text-gray-700 font-bold mb-2">Province</label>
-                <select name="province_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    @foreach($provinces as $province)
-                        <option value="{{ $province->id }}">{{ $province->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+                <div class="mb-3">
+                    <label for="province_id" class="block text-gray-700 font-bold mb-2">Province</label>
+                    <select name="province_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        @foreach($provinces as $province)
+                            <option value="{{ $province->id }}">{{ $province->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <div class="mb-3">
-                <label for="regency_id" class="block text-gray-700 font-bold mb-2">Regency</label>
-                <select name="regency_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    @foreach($regencies as $regency)
-                        <option value="{{ $regency->id }}">{{ $regency->name }}</option>
-                    @endforeach
-                </select>
+                <div class="mb-3">
+                    <label for="regency_id" class="block text-gray-700 font-bold mb-2">Regency</label>
+                    <select name="regency_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        @foreach($regencies as $regency)
+                            <option value="{{ $regency->id }}">{{ $regency->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
 
 
