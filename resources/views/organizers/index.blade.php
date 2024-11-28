@@ -6,9 +6,9 @@
     <div class="container mx-auto p-4">
         <h2 class="text-2xl font-bold mb-4">Organizers</h2>
         <a href="{{ route('organizers.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">Create Organizer</a>
-        <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-4">
+            <table class="w-full text-sm text-left bg-white border border-gray-200">
+                <thead class="text-xs text-gray-700 uppercase bg-white ">
                     <tr>
                         <th scope="col" class="py-3 px-6">
                             No
@@ -26,7 +26,7 @@
                 </thead>
                 <tbody>
                     @foreach($organizers as $organizer)
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <tr class="bg-white border-b ">
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ $loop->iteration }}
                             </th>
@@ -41,7 +41,7 @@
                                 <form action="{{ route('organizers.destroy', $organizer->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+                                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2">Delete</button>
                                 </form>
                             </td>
                         </tr>
