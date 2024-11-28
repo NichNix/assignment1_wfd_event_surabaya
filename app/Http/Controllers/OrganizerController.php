@@ -14,7 +14,11 @@ class OrganizerController extends Controller
         return view('organizers.index', compact('organizers'));
     }
 
-
+    public function __construct()
+    {
+        $this->middleware('prevent.cache'); // Apply the prevent cache middleware
+    }
+    
     public function create()
     {
         return view('organizers.create');

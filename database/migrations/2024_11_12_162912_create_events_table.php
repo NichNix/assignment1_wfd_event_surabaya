@@ -14,10 +14,17 @@ return new class extends Migration
             $table->string('venue');
             $table->date('date');
             $table->time('start_time');
+            $table->time('end_time');
             $table->text('description')->nullable();
             $table->string('booking_url')->nullable();
-            $table->string('tags')->nullable();
-            
+            $table->integer('max_tickets');
+            $table->integer('sold_tickets')->default(0);
+            $table->string('image')->nullable();
+            $table->integer('price')->default(0);
+            $table->string('status')->default('available');
+            $table->string('status_mulai')->default('upcoming');
+            $table->foreignId('province_id')->constrained('provinces')->onDelete('cascade');
+            $table->foreignId('regency_id')->constrained('regencies')->onDelete('cascade');
             $table->foreignId('organizer_id')->constrained('organizers')->onDelete('cascade');
             
             $table->foreignId('event_category_id')->constrained('event_categories')->onDelete('cascade');
