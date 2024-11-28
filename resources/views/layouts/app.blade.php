@@ -12,121 +12,53 @@
             font-family: 'Roboto', sans-serif;
             background-color: #f8f9fa;
         }
-
-        .navbar {
-            background: linear-gradient(135deg, #6e7bff, #9b4dff);
-            border-radius: 10px 10px 0 0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            position: sticky; /* Make the navbar sticky */
-            top: 0; /* Stick to the top of the viewport */
-            z-index: 1030; /* Ensure it stays above other content */
-        }
-
-        .navbar-brand {
-            font-size: 1.75rem;
-            font-weight: bold;
-            color: #fff !important;
-        }
-
-        .navbar-nav .nav-link {
-            font-weight: 500;
-            color: #fff !important;
-        }
-
-        .navbar-nav .nav-link:hover {
-            color: #ffd700 !important;
-        }
-
-        .dropdown-menu {
-            background-color: #fff;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            left: auto !important;
-            right: 0;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .dropdown-item {
-            font-weight: 500;
-            color: #333;
-        }
-
-        .dropdown-item:hover {
-            background-color: #f1f1f1;
-        }
-
-        .container {
-            margin-top: 40px;
-        }
-
-        footer {
-            background-color: #343a40;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-            border-radius: 0 0 10px 10px;
-            position: relative;
-        }
-
-        footer p {
-            margin: 0;
-        }
-
-        .navbar-toggler {
-            border-color: #fff;
-        }
-
-        .navbar-toggler-icon {
-            background-color: #fff;
-        }
     </style>
 </head>
-<body>
+<body class="bg-gray-100">
     <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container-fluid">
-        <a class="navbar-brand " href="{{ url('/') }}">Eventku</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                @auth('admin')
-                    <!-- Admin Dropdown if logged in -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Master Data
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{{ route('categories.index') }}">Master Event Category</a></li>
-                            <li><a class="dropdown-item" href="{{ route('organizers.index') }}">Master Organizer</a></li>
-                            <li><a class="dropdown-item" href="{{ route('events.masterIndex') }}">Master Event</a></li>
-                            <li><a href="{{ route('bookings.index') }}" class="dropdown-item">Manage Bookings</a></li>
-                        </ul>
-                    </li>
-                    <!-- Logout Form for Admin -->
-                    <li class="nav-item">
-                        <form action="{{ route('admin.logout') }}" method="POST" style="display:inline;">
+    <nav class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-b-lg shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a class="text-3xl font-bold text-white" href="{{ url('/') }}">Eventku</a>
+                <button class="lg:hidden text-white focus:outline-none" type="button">
+                    <!-- Hamburger menu icon -->
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+                <div class="hidden lg:flex space-x-6">
+                    @auth('admin')
+                        <!-- Admin Dropdown if logged in -->
+                        <div class="relative inline-block text-left">
+                            <button type="button" class="text-white font-medium hover:text-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400" id="options-menu" aria-haspopup="true" aria-expanded="true">
+                                Master Data
+                            </button>
+                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1" id="options-menu-list">
+                                <a href="{{ route('categories.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Master Event Category</a>
+                                <a href="{{ route('organizers.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Master Organizer</a>
+                                <a href="{{ route('events.masterIndex') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Master Event</a>
+                                <a href="{{ route('bookings.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Manage Bookings</a>
+                            </div>
+                        </div>
+                        <!-- Logout Form for Admin -->
+                        <form action="{{ route('admin.logout') }}" method="POST" class="inline">
                             @csrf
-                            <button type="submit" class="nav-link btn btn-link" style="color: white;">Logout</button>
+                            <button type="submit" class="text-white font-medium hover:text-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400">Logout</button>
                         </form>
-                    </li>
-                @else
-                    <!-- Login Link if not logged in -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin.login') }}">Admin Login</a>
-                    </li>
-                @endauth
-            </ul>
+                    @else
+                        <!-- Login Link if not logged in -->
+                        <a href="{{ route('admin.login') }}" class="text-white font-medium hover:text-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400">Admin Login</a>
+                    @endauth
+                </div>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
     <!-- Content -->
-    <div class="container">
+    <div class="container mx-auto mt-12">
         @yield('content')
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> --}}
 </body>
 </html>
