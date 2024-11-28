@@ -29,10 +29,19 @@
                 <input type="date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="date" required>
             </div>
 
-            <!-- ... rest of the form fields (venue, organizer, etc.)  similarly styled ... -->
+            <div class="mb-3">
+                <label for="start_time" class="block text-gray-700 font-bold mb-2">Start Time</label>
+                <input type="time" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="start_time" required>
+            </div>
+
             <div class="mb-3">
                 <label for="venue" class="block text-gray-700 font-bold mb-2">Location</label>
                 <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="venue" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="block text-gray-700 font-bold mb-2">Description</label>
+                <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="description" rows="5" required></textarea>
             </div>
 
             <div class="mb-3">
@@ -44,7 +53,53 @@
                 </select>
             </div>
 
-            <!-- ... remaining fields styled similarly ... -->
+            <div class="mb-3">
+                <label for="category_id" class="block text-gray-700 font-bold mb-2">Category</label>
+                <select name="category_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="tags" class="block text-gray-700 font-bold mb-2">Tags</label>
+                <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="tags" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="image" class="block text-gray-700 font-bold mb-2">Image</label>
+                <input type="file" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="image" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="price" class="block text-gray-700 font-bold mb-2">Price</label>
+                <input type="number" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="price" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="max_tickets" class="block text-gray-700 font-bold mb-2">Max Tickets</label>
+                <input type="number" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="max_tickets" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="province_id" class="block text-gray-700 font-bold mb-2">Province</label>
+                <select name="province_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    @foreach($provinces as $province)
+                        <option value="{{ $province->id }}">{{ $province->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="regency_id" class="block text-gray-700 font-bold mb-2">Regency</label>
+                <select name="regency_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    @foreach($regencies as $regency)
+                        <option value="{{ $regency->id }}">{{ $regency->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
 
             <div class="flex justify-end mt-4">
                 <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Save Event</button>
