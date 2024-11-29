@@ -15,33 +15,33 @@
     </form>
  
 
-    <div class="overflow-x-auto shadow-md rounded-lg">
-        <table class="w-full table-auto bg-white">
-            <thead class="bg-gray-100">
+    <div class="mt-6 overflow-x-auto shadow-md rounded-lg">
+        <table class="w-full table-auto border-collapse">
+            <thead class="bg-gray-200 text-gray-800">
                 <tr>
-                    <th class="px-4 py-2 text-left">ID</th>
-                    <th class="px-4 py-2 text-left">Event</th>
-                    <th class="px-4 py-2 text-left">Name</th>
-                    <th class="px-4 py-2 text-left">Address</th>
-                    <th class="px-4 py-2 text-left">Phone Number</th>
-                    <th class="px-4 py-2 text-left">Actions</th>
+                    <th class="py-2 px-4 text-left">ID</th>
+                    <th class="py-2 px-4 text-left">Event</th>
+                    <th class="py-2 px-4 text-left">Name</th>
+                    <th class="py-2 px-4 text-left">Address</th>
+                    <th class="py-2 px-4 text-left">Phone Number</th>
+                    <th class="py-2 px-4 text-left">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($bookings as $booking)
                     <tr class="hover:bg-gray-100">
-                        <td class="px-4 py-2">{{ $booking->id }}</td>
-                        <td class="px-4 py-2">
+                        <td class="py-2 px-4">{{ $booking->id }}</td>
+                        <td class="py-2 px-4">
                             @if ($booking->event)
                                 {{ $booking->event->title }}
                             @else
                                 No event found
                             @endif
                         </td>
-                        <td class="px-4 py-2">{{ $booking->nama }}</td>
-                        <td class="px-4 py-2">{{ $booking->alamat }}</td>
-                        <td class="px-4 py-2">{{ $booking->nomor_hp }}</td>
-                        <td class="px-4 py-2">
+                        <td class="py-2 px-4">{{ $booking->nama }}</td>
+                        <td class="py-2 px-4">{{ $booking->alamat }}</td>
+                        <td class="py-2 px-4">{{ $booking->nomor_hp }}</td>
+                        <td class="py-2 px-4">
                             <a href="{{ route('bookings.edit', $booking->id) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline">Edit</a>
                         </td>
                     </tr>
