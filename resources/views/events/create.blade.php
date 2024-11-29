@@ -34,14 +34,39 @@
             <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="venue" required>
         </div>
 
+        @auth('admin') <!-- Check if the authenticated user is an admin -->
+        <!-- Show the organizer dropdown for admin users -->
         <div class="mb-4">
             <label for="organizer_id" class="block text-gray-700 font-bold mb-2">Organizer</label>
-            <select name="organizer_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            <select id="organizer_id" name="organizer_id"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                required>
                 @foreach($organizers as $organizer)
-                <option value="{{ $organizer->id }}">{{ $organizer->name }}</option>
+                    <option value="{{ $organizer->id }}">{{ $organizer->name }}</option>
                 @endforeach
             </select>
         </div>
+    @endauth
+
+    @auth('organizer') <!-- Check if the user is authenticated as an organizer -->
+        <!-- Hidden input for organizer_id -->
+        <input type="hidden" name="organizer_id" value="{{ auth('organizer')->user()->id }}">
+
+        <div class="mb-4">
+            <label for="organizer_name" class="block text-gray-700 font-bold mb-2">Organizer</label>
+            <input 
+                type="text" 
+                id="organizer_name" 
+                value="{{ auth('organizer')->user()->name }}" 
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100" 
+                readonly
+            >
+        </div>
+    @endauth
+
+
+
+
 
         <div class="mb-4">
             <label for="event_category_id" class="block text-gray-700 font-bold mb-2">Event Category</label>

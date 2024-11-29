@@ -15,6 +15,7 @@ class Event extends Model
         'venue',
         'date', // Tanggal event (YYYY-MM-DD)
         'start_time', // Waktu mulai event (HH:mm:ss)
+        'end_time', // Waktu selesai event (HH:mm:ss)
         'description',
         'booking_url',
         'tags',

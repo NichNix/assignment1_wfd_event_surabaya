@@ -36,14 +36,36 @@
             <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="venue" value="{{ old('venue', $event->venue) }}" required>
         </div>
 
+        @auth('admin')
+        <!-- Admin selects the organizer -->
         <div class="mb-4">
             <label for="organizer_id" class="block text-gray-700 font-bold mb-2">Organizer</label>
-            <select name="organizer_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            <select name="organizer_id"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                required>
                 @foreach($organizers as $organizer)
-                <option value="{{ $organizer->id }}" {{ $event->organizer_id == $organizer->id ? 'selected' : '' }}>{{ $organizer->name }}</option>
+                    <option value="{{ $organizer->id }}" {{ old('organizer_id') == $organizer->id ? 'selected' : '' }}>
+                        {{ $organizer->name }}
+                    </option>
                 @endforeach
             </select>
         </div>
+    @endauth
+
+    @auth('organizer')
+        <!-- Organizers are pre-selected with hidden input -->
+        <input type="hidden" name="organizer_id" value="{{ auth('organizer')->user()->id }}">
+        <div class="mb-4">
+            <label for="organizer_name" class="block text-gray-700 font-bold mb-2">Organizer</label>
+            <input 
+                type="text" 
+                id="organizer_name" 
+                value="{{ auth('organizer')->user()->name }}" 
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100" 
+                readonly
+            >
+        </div>
+    @endauth
 
         <div class="mb-4">
             <label for="event_category_id" class="block text-gray-700 font-bold mb-2">Event Category</label>

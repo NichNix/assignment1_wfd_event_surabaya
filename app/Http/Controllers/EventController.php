@@ -17,8 +17,15 @@ class EventController extends Controller
         $this->middleware('prevent.cache'); // Apply the prevent cache middleware
     }
 
+    
+
     public function index(Request $request)
     {
+
+        if (auth()->guard('organizer')->check()) {
+            // If the user is an organizer, redirect them to the organizer's home page
+            return redirect()->route('organizers.home');
+        }
         // Fetch all provinces and regencies
         $provinces = Province::all();
         $regencies = Regency::all();
@@ -56,9 +63,21 @@ class EventController extends Controller
 
     public function masterIndex()
     {
-        $events = Event::with('organizer')->get();
-        return view('events.masterIndex', compact('events'));
+        if (auth()->guard('admin')->check()) {
+            // If logged in as an admin, show the event master index
+            $events = Event::with('organizer')->get();
+            return view('events.masterIndex', compact('events'));
+        }
+    
+        if (auth()->guard('organizer')->check()) {
+            // If logged in as an organizer, redirect to their home page
+            return redirect()->route('organizers.home');
+        }
+    
+        // Optionally, redirect if the user is not authenticated
+        return redirect()->route('login');
     }
+    
 
     public function show($id)
     {
@@ -77,56 +96,52 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'title' => 'required|string|max:255',
-            'venue' => 'required|string|max:255',
             'date' => 'required|date',
-            'start_time' => 'required',
-            'end_time' => 'required',
-            'organizer_id' => 'required|exists:organizers,id',
+            'venue' => 'required|string|max:255',
+            'organizer_id' => 'required|exists:organizers,id', // Ensure organizer_id is valid
             'event_category_id' => 'required|exists:event_categories,id',
-            'province_id' => 'required|exists:provinces,id',
-            'regency_id' => 'required|exists:regencies,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'description' => 'required',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i',
+            'description' => 'nullable|string',
             'booking_url' => 'nullable|url',
             'max_tickets' => 'required|integer',
-            'price' => 'required|integer',
             'sold_tickets' => 'required|integer',
-            'status' => 'required|string',
+            'status' => 'required|in:available,sold-out,cancelled',
+            'image' => 'nullable|image',
+            'price' => 'required|numeric',
+            'province_id' => 'required|exists:provinces,id',
+            'regency_id' => 'required|exists:regencies,id',
         ]);
-
-        $imagePath = null;
+    
+        // Store the event with the selected or logged-in organizer's ID
+        $event = new Event();
+        $event->title = $request->title;
+        $event->date = $request->date;
+        $event->venue = $request->venue;
+        $event->organizer_id = $request->organizer_id ?? auth()->user()->id;  // If organizer_id is not provided (for organizer), use the logged-in user
+        $event->event_category_id = $request->event_category_id;
+        $event->start_time = $request->start_time;
+        $event->end_time = $request->end_time;
+        $event->description = $request->description;
+        $event->booking_url = $request->booking_url;
+        $event->max_tickets = $request->max_tickets;
+        $event->sold_tickets = $request->sold_tickets;
+        $event->status = $request->status;
+        $event->price = $request->price;
+        $event->province_id = $request->province_id;
+        $event->regency_id = $request->regency_id;
+    
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            // Generate a unique file name or use the original file name
-            $imagePath = $image->storeAs('events', $image->getClientOriginalName(), 'public');
+            $event->image = $request->file('image')->store('events', 'public');
         }
-
-
-        Event::create([
-            'title' => $validated['title'],
-            'venue' => $validated['venue'],
-            'date' => $validated['date'],
-            'start_time' => $validated['start_time'],
-            'end_time' => $validated['end_time'],
-            'description' => $validated['description'],
-            'booking_url' => $validated['booking_url'],
-            'max_tickets' => $validated['max_tickets'],
-            'sold_tickets' => $validated['sold_tickets'],
-            'status' => $validated['status'],
-            'image' => $validated['image'] ?? null,  // Handle image properly
-            'price' => $validated['price'],
-            'province_id' => $validated['province_id'],
-            'regency_id' => $validated['regency_id'],
-            'organizer_id' => $validated['organizer_id'],
-            'event_category_id' => $validated['event_category_id'],
-            'active' => 1,
-        ]);
-
-
-        return redirect()->route('events.index')->with('success', 'Event created successfully!');
+    
+        $event->save();
+    
+        return redirect()->route('events.masterIndex')->with('success', 'Event created successfully!');
     }
+    
 
 
     public function edit($id)
@@ -193,14 +208,31 @@ class EventController extends Controller
     $event->save();
 
     // Redirect back with a success message
-    return redirect()->route('events.index')->with('success', 'Event updated successfully!');
+    return redirect()->route('events.masterIndex')->with('success', 'Event created successfully!');
 }
 
 
-    public function destroy($id)
-    {
+public function destroy($id)
+{
+    // Ensure the user is authenticated as either admin or organizer
+    if (auth()->guard('admin')->check()) {
+        // If logged in as an admin, allow the deletion
         $event = Event::findOrFail($id);
         $event->delete();
+
+        // Redirect to the admin event index after deletion
         return redirect()->route('events.index')->with('success', 'Event deleted successfully!');
     }
+
+    if (auth()->guard('organizer')->check()) {
+        // If logged in as an organizer, redirect to their home page
+        $event = Event::findOrFail($id);
+        $event->delete();
+        return redirect()->route('organizers.home')->with('error', 'You cannot delete events as an organizer.');
+    }
+
+    // If neither admin nor organizer, redirect to login
+}
+
+
 }

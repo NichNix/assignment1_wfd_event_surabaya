@@ -6,6 +6,15 @@
 <div class="container mx-auto p-4">
     <h1 class="text-3xl font-bold mb-4">Master Bookings</h1>
 
+    <!-- Search Form -->
+    <form method="GET" action="{{ route('bookings.search') }}" class="mb-4">
+        <div class="flex items-center">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name..." class="p-2 border rounded-l-md focus:outline-none">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-r-md focus:outline-none">Search</button>
+        </div>
+    </form>
+ 
+
     <div class="overflow-x-auto shadow-md rounded-lg">
         <table class="w-full table-auto bg-white">
             <thead class="bg-gray-100">

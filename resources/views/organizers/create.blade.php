@@ -13,6 +13,16 @@
             </div>
 
             <div class="mb-4">
+                <label for="email" class="block text-gray-700 font-bold mb-2">Email Address</label>
+                <input type="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="email">
+            </div>
+
+            <div class="mb-4">
+                <label for="password" class="block text-gray-700 font-bold mb-2">Password</label>
+                <input type="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="password">
+            </div>
+
+            <div class="mb-4">
                 <label for="facebook_link" class="block text-gray-700 font-bold mb-2">Facebook URL</label>
                 <input type="url" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="facebook_link">
             </div>

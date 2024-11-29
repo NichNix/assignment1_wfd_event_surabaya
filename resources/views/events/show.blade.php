@@ -82,7 +82,6 @@
                 class="w-full py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105">
                 Book Now
             </a>
-
             @endif
         </div>
     </div>

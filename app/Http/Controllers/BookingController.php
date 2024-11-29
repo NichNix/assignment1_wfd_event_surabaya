@@ -5,28 +5,54 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Book;
 use App\Models\Event;
+use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
 {
 
+    public function getBookings($eventId)
+    {
+        // Fetch the event along with its bookings
+        $event = Event::with('bookings')->findOrFail($eventId);
+
+        // Format the bookings data to include the fields you need
+        $bookings = $event->bookings->map(function ($booking) {
+            return [
+                'user_name' => $booking->nama,
+                'user_email' => $booking->email,
+                'tickets_booked' => $booking->nomor_hp, // Adjust this to actual field for tickets booked
+                'created_at' => $booking->created_at,
+            ];
+        });
+
+        // Return the bookings as a JSON response
+        return response()->json([
+            'event' => $event,
+            'bookings' => $bookings
+        ]);
+    }
+
+
+
+
     public function index()
     {
         // Fetch all bookings from the database
-         // Fetch all bookings from the database
-         $bookings = Book::with('event')->get(); // Eager load the 'event' relation
+        // Fetch all bookings from the database
+        $bookings = Book::with('event')->get(); // Eager load the 'event' relation
 
-         // Return the 'adminbook.index' view with the bookings data
-         return view('adminbook.index', compact('bookings'));
+        // Return the 'adminbook.index' view with the bookings data
+        return view('adminbook.index', compact('bookings'));
     }
     public function create($event_id)
     {
         // Retrieve a single event by its ID (or throw a 404 error if not found)
         $event = Event::findOrFail($event_id);
-    
+
         // Pass the event to the view
         return view('bookings.create', compact('event'));
     }
-    
+
 
 
 
@@ -58,6 +84,29 @@ class BookingController extends Controller
         // Redirect with a success message
         return redirect()->route('events.show', $validated['id_event'])->with('success', 'Booking successful!');
     }
+
+    public function search(Request $request)
+    {
+        $events = Event::all();  // Fetch all events for the dropdown
+
+        $query = Book::query();
+
+        // Filter by name
+        if ($request->has('search') && $request->search) {
+            $query->where('nama', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter by event if selected
+        if ($request->has('event_id') && $request->event_id) {
+            $query->where('id_event', $request->event_id);
+        }
+
+        // Get the filtered bookings
+        $bookings = $query->get();
+
+        return view('adminbook.index', compact('bookings', 'events'));
+    }
+
 
     public function __construct()
     {
@@ -97,5 +146,4 @@ class BookingController extends Controller
         // Redirect back to the booking list with success message
         return redirect()->route('bookings.index')->with('success', 'Booking updated successfully!');
     }
-
 }
