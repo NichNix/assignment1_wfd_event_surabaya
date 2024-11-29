@@ -16,7 +16,7 @@
                 <select id="province" name="province" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="">Select Province</option>
                     @foreach($provinces as $province)
-                        <option value="{{ $province->id }}" {{ request('province') == $province->id ? 'selected' : '' }}>{{ $province->name }}</option>
+                    <option value="{{ $province->id }}" {{ request('province') == $province->id ? 'selected' : '' }}>{{ $province->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -26,9 +26,9 @@
                 <select id="regency" name="regency" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="">Select Regency</option>
                     @if(request('province') && $regencies)
-                        @foreach($regencies as $regency)
-                            <option value="{{ $regency->id }}" {{ request('regency') == $regency->id ? 'selected' : '' }}>{{ $regency->name }}</option>
-                        @endforeach
+                    @foreach($regencies as $regency)
+                    <option value="{{ $regency->id }}" {{ request('regency') == $regency->id ? 'selected' : '' }}>{{ $regency->name }}</option>
+                    @endforeach
                     @endif
                 </select>
             </div>
@@ -38,7 +38,7 @@
                 <select name="category" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="">Select Category</option>
                     @foreach($categories as $category)
-                        <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                    <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -62,20 +62,60 @@
     </form>
 
     <!-- Events Listing -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
-        @foreach($events as $event)
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <div class="p-4">
-                    <h3 class="text-xl font-bold text-indigo-600 mb-2">{{ $event->title }} || {{ $event->status }}</h3>
-                    <p class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt"></i> {{ $event->venue }}, {{ $event->regency->name }}, {{ $event->province->name }}</p>
-                    <p class="text-gray-600 mb-2"><i class="fas fa-calendar-alt"></i> {{ $event->date }}</p>
-                    <p class="text-gray-600 mb-2"><i class="fas fa-clock"></i> {{ $event->start_time }}</p>
-                    <p class="text-gray-600 mb-2"><i class="fas fa-tag"></i> {{ $event->category->name }}</p>
-                    <a href="{{ route('events.show', $event->id) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">View Details</a>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+    @foreach($events as $event)
+        <div class="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-200 hover:border-indigo-600">
+            <div class="p-6">
+                <!-- Event Title with Status -->
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-2xl font-semibold text-indigo-600">
+                        {{ $event->title }}
+                    </h3>
+                    <span class="text-sm font-medium px-3 py-1 rounded-full bg-indigo-100 text-indigo-600">
+                        {{ $event->status }}
+                    </span>
                 </div>
-            </div>
-        @endforeach
+
+<!-- Event Date and Time -->
+<div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-2">Event Date and Time</h3>
+    <div class="flex items-center text-gray-600 text-sm mb-3">
+    <span class="text-gray-800 text-lg font-semibold bg-gray-100 px-3 py-1 rounded-md mr-4">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</span>
+    <span class="text-indigo-600 text-lg font-semibold">{{ \Carbon\Carbon::parse($event->start_time)->format('h:i A') }}</span>
+</div>
+
+</div>
+
+<!-- Event Location -->
+<div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-2">Event Location</h3>
+    <div class="flex items-center text-gray-600 text-sm mb-6">
+    <span class="text-gray-700 text-sm font-medium bg-gray-50 px-3 py-1 rounded-md">{{ $event->venue }}, {{ $event->regency->name }}, {{ $event->province->name }}</span>
     </div>
+</div>
+
+<!-- Event Category -->
+<div class="mb-6">
+    <h3 class="text-xl font-semibold text-gray-800 mb-3">Event Category</h3>
+    <div class="flex items-center text-gray-600 text-sm">
+    <span class="text-white bg-indigo-600 font-medium text-sm px-3 py-1 rounded-md">{{ $event->category->name }}</span>
+    </div>
+</div>
+
+
+
+                <!-- View Details Button -->
+                <a href="{{ route('events.show', $event->id) }}" class="w-full inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg text-center transition duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+                    View Details
+                </a>
+            </div>
+        </div>
+    @endforeach
+</div>
+
+
+</div>
+
 </div>
 
 <script>

@@ -19,13 +19,13 @@
         <div class="container mx-auto px-6 py-4">
             <div class="flex justify-between items-center">
                 <a class="text-3xl font-bold text-white" href="{{ url('/') }}">Eventku</a>
-                <button class="lg:hidden text-white focus:outline-none" type="button">
+                <button class="lg:hidden text-white focus:outline-none" type="button" id="hamburger-menu">
                     <!-- Hamburger menu icon -->
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
                 </button>
-                <div class="hidden lg:flex space-x-6">
+                <div class="hidden lg:flex space-x-6" id="desktop-menu">
                     @auth('admin')
                         <!-- Admin Dropdown if logged in -->
                         <div class="relative inline-block text-left">
@@ -53,12 +53,39 @@
         </div>
     </nav>
 
+    <!-- Mobile Menu -->
+    <div class="lg:hidden hidden bg-gray-800 bg-opacity-90" id="mobile-menu">
+        <div class="space-y-4 px-6 py-4">
+            @auth('admin')
+                <a href="{{ route('categories.index') }}" class="block text-white hover:bg-purple-700 px-4 py-2 rounded-md">Master Event Category</a>
+                <a href="{{ route('organizers.index') }}" class="block text-white hover:bg-purple-700 px-4 py-2 rounded-md">Master Organizer</a>
+                <a href="{{ route('events.masterIndex') }}" class="block text-white hover:bg-purple-700 px-4 py-2 rounded-md">Master Event</a>
+                <a href="{{ route('bookings.index') }}" class="block text-white hover:bg-purple-700 px-4 py-2 rounded-md">Manage Bookings</a>
+                <form action="{{ route('admin.logout') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" class="text-white hover:bg-purple-700 px-4 py-2 rounded-md">Logout</button>
+                </form>
+            @else
+                <a href="{{ route('admin.login') }}" class="text-white hover:bg-purple-700 px-4 py-2 rounded-md">Admin Login</a>
+            @endauth
+        </div>
+    </div>
+
     <!-- Content -->
     <div class="container mx-auto mt-12">
         @yield('content')
     </div>
 
     <script>
+        const hamburgerMenu = document.getElementById('hamburger-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        // Toggle mobile menu on hamburger click
+        hamburgerMenu.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Toggle dropdown menu
         const optionsMenuButton = document.getElementById('options-menu-button');
         const optionsMenuList = document.getElementById('options-menu-list');
 
