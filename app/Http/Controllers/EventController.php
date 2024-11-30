@@ -21,16 +21,16 @@ class EventController extends Controller
 
     public function index(Request $request)
     {
-
         if (auth()->guard('organizer')->check()) {
             // If the user is an organizer, redirect them to the organizer's home page
             return redirect()->route('organizers.home');
         }
+    
         // Fetch all provinces and regencies
         $provinces = Province::all();
         $regencies = Regency::all();
         $categories = EventCategory::all();
-
+    
         // Start the query for events
         $events = Event::with(['province', 'regency', 'category'])
             ->when($request->province, function ($query) use ($request) {
@@ -48,12 +48,21 @@ class EventController extends Controller
             ->when($request->end_date, function ($query) use ($request) {
                 return $query->whereDate('date', '<=', Carbon::parse($request->end_date)->toDateString());
             })
+            ->when($request->status, function ($query) use ($request) {
+                if ($request->status == 'upcoming') {
+                    return $query->where('date', '>', now());
+                } elseif ($request->status == 'ongoing') {
+                    return $query->whereDate('date', '=', now()->toDateString());
+                } elseif ($request->status == 'past') {
+                    return $query->where('date', '<', now());
+                }
+            })
             ->get();
-
-
-        // Return the view with events, provinces, and regencies
+    
+        // Return the view with events, provinces, regencies, and categories
         return view('events.index', compact('events', 'provinces', 'regencies', 'categories'));
     }
+    
 
     public function list()
     {
