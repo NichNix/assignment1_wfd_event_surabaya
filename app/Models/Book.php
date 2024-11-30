@@ -9,8 +9,14 @@ class Book extends Model
 {
     use HasFactory;
     
-    protected $fillable = ['nama', 'email', 'alamat', 'nomor_hp', 'id_event'];
-
+    protected $fillable = [
+        'nama',
+        'email',
+        'alamat',
+        'nomor_hp',
+        'event_id',
+        'status_bayar',
+    ];
     public function event()
     {
         return $this->belongsTo(Event::class, 'id_event');

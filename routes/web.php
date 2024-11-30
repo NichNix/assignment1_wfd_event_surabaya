@@ -59,12 +59,18 @@ Route::group(['auth.preventorg'], function () {
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
     Route::get('/bookings/create/{event_id}', [BookingController::class, 'create'])->name('bookings.create');
     Route::get('/payment-success/{id}', function ($id) {
-        $booking = Book::find($id);
+        // Find and update the booking
+        $booking = Book::findOrFail($id);
         $booking->update(['status_bayar' => 'paid']);
+        
+        // Refresh the instance to get the latest data
+        $booking->refresh();
     
-        // Kirim email
-        Mail::to($booking->email)->send(new PaymentSuccessMail($booking));
-    
+        // Send an email if needed (commented out for now)
+        // Mail::to($booking->email)->send(new PaymentSuccessMail($booking));
+        
+        // Return the success view
         return view('bookings.success', ['booking' => $booking]);
     });
+    
 });

@@ -13,7 +13,7 @@
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-r-md focus:outline-none">Search</button>
         </div>
     </form>
- 
+
 
     <div class="mt-6 overflow-x-auto shadow-md rounded-lg">
         <table class="w-full table-auto border-collapse">
@@ -24,27 +24,34 @@
                     <th class="py-2 px-4 text-left">Name</th>
                     <th class="py-2 px-4 text-left">Address</th>
                     <th class="py-2 px-4 text-left">Phone Number</th>
+                    <th class="py-2 px-4 text-left">Payment Status</th>
                     <th class="py-2 px-4 text-left">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($bookings as $booking)
-                    <tr class="hover:bg-gray-100">
-                        <td class="py-2 px-4">{{ $booking->id }}</td>
-                        <td class="py-2 px-4">
-                            @if ($booking->event)
-                                {{ $booking->event->title }}
-                            @else
-                                No event found
-                            @endif
-                        </td>
-                        <td class="py-2 px-4">{{ $booking->nama }}</td>
-                        <td class="py-2 px-4">{{ $booking->alamat }}</td>
-                        <td class="py-2 px-4">{{ $booking->nomor_hp }}</td>
-                        <td class="py-2 px-4">
-                            <a href="{{ route('bookings.edit', $booking->id) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline">Edit</a>
-                        </td>
-                    </tr>
+                <tr class="hover:bg-gray-100">
+                    <td class="py-2 px-4">{{ $booking->id }}</td>
+                    <td class="py-2 px-4">
+                        @if ($booking->event)
+                        {{ $booking->event->title }}
+                        @else
+                        No event found
+                        @endif
+                    </td>
+                    <td class="py-2 px-4">{{ $booking->nama }}</td>
+                    <td class="py-2 px-4">{{ $booking->alamat }}</td>
+                    <td class="py-2 px-4">{{ $booking->nomor_hp }}</td>
+                    <td class="py-2 px-4">
+                        <span class="inline-block px-3 py-1 rounded text-white font-bold
+                    {{ $booking->status_bayar === 'paid' ? 'bg-yellow-500' : 'bg-red-500' }}">
+                            {{ ucfirst($booking->status_bayar) }}
+                        </span>
+                    </td>
+                    <td class="py-2 px-4">
+                        <a href="{{ route('bookings.edit', $booking->id) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline">Edit</a>
+                    </td>
+                </tr>
                 @endforeach
             </tbody>
         </table>
