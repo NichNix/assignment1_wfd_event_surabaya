@@ -14,7 +14,7 @@ class Book extends Model
         'email',
         'alamat',
         'nomor_hp',
-        'event_id',
+        'id_event',
         'status_bayar',
     ];
     public function event()

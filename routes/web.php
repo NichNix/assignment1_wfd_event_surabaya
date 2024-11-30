@@ -36,7 +36,7 @@ Route::middleware(['auth:admin', 'prevent.cache'])->group(function () {
     Route::put('/bookings/{id}', [BookingController::class, 'update'])->name('bookings.update');
     Route::get('/organizers/{id}', [OrganizerController::class, 'show'])->name('organizers.show');
     Route::get('/bookings', [BookingController::class, 'search'])->name('bookings.search');
-    
+
     Route::get('/master-events', [EventController::class, 'masterIndex'])->name('events.masterIndex');
 });
 Route::middleware(['prevent.cache'])->group(function () {
@@ -62,15 +62,11 @@ Route::group(['auth.preventorg'], function () {
         // Find and update the booking
         $booking = Book::findOrFail($id);
         $booking->update(['status_bayar' => 'paid']);
-        
+
+        session(['payment_success' => true]);
         // Refresh the instance to get the latest data
         $booking->refresh();
-    
-        // Send an email if needed (commented out for now)
-        // Mail::to($booking->email)->send(new PaymentSuccessMail($booking));
-        
-        // Return the success view
+
         return view('bookings.success', ['booking' => $booking]);
     });
-    
 });

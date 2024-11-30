@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Models\Book;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -13,14 +12,24 @@ class PaymentSuccessMail extends Mailable
 
     public $booking;
 
-    public function __construct(Book $booking)
+    /**
+     * Create a new message instance.
+     *
+     * @return void
+     */
+    public function __construct($booking)
     {
         $this->booking = $booking;
     }
 
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
     public function build()
     {
-        return $this->view('emails.payment_success')
-                    ->subject('Payment Confirmation');
+        return $this->subject('Payment Success')
+                    ->view('emails.payment_success');
     }
 }

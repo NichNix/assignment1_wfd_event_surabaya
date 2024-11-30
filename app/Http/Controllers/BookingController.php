@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Midtrans\Config;
 use Midtrans\Snap;
+
 class BookingController extends Controller
 {
 
@@ -33,9 +34,6 @@ class BookingController extends Controller
         ]);
     }
 
-
-
-
     public function index()
     {
         // Fetch all bookings from the database
@@ -57,7 +55,7 @@ class BookingController extends Controller
 
 
 
-      public function store(Request $request)
+    public function store(Request $request)
     {
         // Validasi input
         $request->validate([
@@ -113,7 +111,6 @@ class BookingController extends Controller
         ]);
     }
 
-   
 
     public function search(Request $request)
     {
@@ -154,6 +151,16 @@ class BookingController extends Controller
         return view('adminbook.edit', compact('booking'));
     }
 
+    public function sendPaymentSuccessEmail($id)
+    {
+        $booking = Book::findOrFail($id);
+        $booking->update(['status_bayar' => 'paid']);
+
+        // Set session flag
+        session(['payment_success' => true]);
+
+        return redirect()->route('payment.success', $booking->id);
+    }
     public function update(Request $request, $id)
     {
         // Validate the incoming data
@@ -162,6 +169,7 @@ class BookingController extends Controller
             'email' => 'required|email',
             'alamat' => 'required|string|max:255',
             'nomor_hp' => 'required|string|max:15',
+            'status_bayar' => 'required|string|in:unpaid,paid',
         ]);
 
         // Find the booking and update the data
@@ -171,6 +179,7 @@ class BookingController extends Controller
             'email' => $request->email,
             'alamat' => $request->alamat,
             'nomor_hp' => $request->nomor_hp,
+            'status_bayar' => $request->status_bayar,
         ]);
 
         // Redirect back to the booking list with success message
