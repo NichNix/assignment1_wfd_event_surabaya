@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Book;
 use App\Models\Event;
-use Illuminate\Support\Facades\DB;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Midtrans\Config;
+use Midtrans\Snap;
 class BookingController extends Controller
 {
 
@@ -56,34 +57,63 @@ class BookingController extends Controller
 
 
 
-    public function store(Request $request)
+      public function store(Request $request)
     {
-        // Validate the incoming request
-        $validated = $request->validate([
+        // Validasi input
+        $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'required|email',
-            'alamat' => 'required|string|max:255',
-            'nomor_hp' => 'required|string|max:15',
+            'email' => 'required|email|max:255',
+            'alamat' => 'required|string',
+            'nomor_hp' => 'required|string',
             'id_event' => 'required|exists:events,id',
         ]);
 
-        // Create a new booking entry in the 'book' table
-        $booking = new Book();
-        $booking->nama = $validated['nama'];
-        $booking->email = $validated['email'];
-        $booking->alamat = $validated['alamat'];
-        $booking->nomor_hp = $validated['nomor_hp'];
-        $booking->id_event = $validated['id_event'];
-        $booking->save();
+        // Simpan booking
+        $booking = Book::create([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'alamat' => $request->alamat,
+            'nomor_hp' => $request->nomor_hp,
+            'id_event' => $request->id_event,
+            'status_bayar' => 'unpaid',
+        ]);
 
-        // Update the sold_tickets count for the event
-        $event = Event::findOrFail($validated['id_event']);
-        $event->sold_tickets = $event->sold_tickets + 1; // Increment sold tickets by 1
-        $event->save();
+        // Ambil detail event
+        $event = Event::find($request->id_event);
 
-        // Redirect with a success message
-        return redirect()->route('events.show', $validated['id_event'])->with('success', 'Booking successful!');
+        // Konfigurasi Midtrans
+        Config::$serverKey = config('midtrans.server_key');
+        Config::$isProduction = config('midtrans.is_production');
+        Config::$isSanitized = config('midtrans.is_sanitized');
+        Config::$is3ds = config('midtrans.is_3ds');
+
+        // Parameter transaksi
+        $transactionDetails = [
+            'order_id' => 'BOOK-' . $booking->id,
+            'gross_amount' => $event->price, // Harga event
+        ];
+
+        $customerDetails = [
+            'first_name' => $request->nama,
+            'email' => $request->email,
+            'phone' => $request->nomor_hp,
+        ];
+
+        $params = [
+            'transaction_details' => $transactionDetails,
+            'customer_details' => $customerDetails,
+        ];
+
+        // Dapatkan token Snap
+        $snapToken = Snap::getSnapToken($params);
+
+        return view('bookings.payment', [
+            'snapToken' => $snapToken,
+            'booking' => $booking,
+        ]);
     }
+
+   
 
     public function search(Request $request)
     {

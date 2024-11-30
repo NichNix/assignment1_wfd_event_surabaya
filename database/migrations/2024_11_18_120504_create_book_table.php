@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('email');
             $table->string('alamat');
             $table->string('nomor_hp');
-
+            $table->string('status_bayar')->default('unpaid');
+            $table->string('transaction_id')->nullable();
 
             $table->unsignedBigInteger('id_event');
             $table->foreign('id_event')->references('id')->on('events')->onDelete('cascade');         

@@ -7,6 +7,10 @@ use App\Http\Controllers\OrganizerController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\OrganizerAuthController;
+use App\Models\Book;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PaymentSuccessMail;
+
 use App\Models\Regency;
 
 Route::get('/', [EventController::class, 'index'])->name('events.index')->middleware('auth.preventorg');
@@ -54,4 +58,13 @@ Route::group(['auth.preventorg'], function () {
     Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
     Route::get('/bookings/create/{event_id}', [BookingController::class, 'create'])->name('bookings.create');
+    Route::get('/payment-success/{id}', function ($id) {
+        $booking = Book::find($id);
+        $booking->update(['status_bayar' => 'paid']);
+    
+        // Kirim email
+        Mail::to($booking->email)->send(new PaymentSuccessMail($booking));
+    
+        return view('bookings.success', ['booking' => $booking]);
+    });
 });

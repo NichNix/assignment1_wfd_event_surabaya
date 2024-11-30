@@ -22,6 +22,7 @@ class BookSeeder extends Seeder
                 'email' => $faker->email,
                 'alamat' => $faker->address,
                 'nomor_hp' => $faker->phoneNumber,
+                'status_bayar' => 'paid',
                 'id_event' => $eventId,  // Use the defined $eventId
                 'created_at' => now(),
                 'updated_at' => now(),
