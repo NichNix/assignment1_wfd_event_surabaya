@@ -97,14 +97,25 @@
     @endif
 </div>
 <!-- Bookings Modal (Card style) -->
-<div id="bookingsModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 items-center justify-center hidden">
+<div id="bookingsModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
     <div class="bg-white rounded-lg shadow-lg p-6 w-3/4 md:w-1/2 lg:w-1/3">
-        <!-- Event Title (This will be populated dynamically) -->
+        <!-- Event Title -->
         <h2 id="eventTitle" class="text-2xl font-semibold text-center mb-4">Bookings for Event</h2>
 
         <!-- Bookings List -->
         <div id="bookingsList" class="mb-4">
             <!-- Booking items will be dynamically loaded here -->
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="flex justify-between items-center">
+            <button id="prevPage" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-50" disabled>
+                Previous
+            </button>
+            <span id="currentPage" class="text-gray-700">Page 1</span>
+            <button id="nextPage" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-50">
+                Next
+            </button>
         </div>
 
         <!-- Close Button -->
@@ -115,62 +126,116 @@
 </div>
 
 
+
+
 @endsection
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const seeBookingsBtn = document.querySelectorAll('#seeBookingsBtn');
-        const bookingsModal = document.getElementById('bookingsModal');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const bookingsList = document.getElementById('bookingsList');
-        const eventTitle = document.getElementById('eventTitle');
+document.addEventListener("DOMContentLoaded", function () {
+    const seeBookingsBtn = document.querySelectorAll("#seeBookingsBtn");
+    const bookingsModal = document.getElementById("bookingsModal");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const bookingsList = document.getElementById("bookingsList");
+    const eventTitle = document.getElementById("eventTitle");
+    const prevPageBtn = document.getElementById("prevPage");
+    const nextPageBtn = document.getElementById("nextPage");
+    const currentPageSpan = document.getElementById("currentPage");
 
-        // When the "See Bookings" button is clicked
-        seeBookingsBtn.forEach(button => {
-            button.addEventListener('click', function() {
-                const eventId = this.getAttribute('data-event-id');
+    let currentPage = 1;
+    const itemsPerPage = 5;
+    let bookings = [];
 
-                // Show the modal
-                bookingsModal.classList.remove('hidden');
+    // Fetch and render bookings for the selected event
+    const renderBookings = () => {
+        bookingsList.innerHTML = "";
 
-                // Fetch bookings for the event
-                fetch(`/events/${eventId}/bookings`)
-                    .then(response => response.json())
-                    .then(data => {
-                        // Clear the list before adding new bookings
-                        bookingsList.innerHTML = '';
+        // Calculate start and end index for the current page
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = Math.min(startIndex + itemsPerPage, bookings.length);
 
-                        // Update the modal title with the event name
-                        eventTitle.textContent = `Bookings for Event: ${data.event.title}`;
+        // Check if there are any bookings
+        if (bookings.length > 0) {
+            for (let i = startIndex; i < endIndex; i++) {
+                const booking = bookings[i];
 
-                        // Check if there are any bookings
-                        if (data.bookings.length > 0) {
-                            data.bookings.forEach(booking => {
-                                // Create a booking item
-                                const bookingItem = document.createElement('div');
-                                bookingItem.classList.add('mb-2', 'border-b', 'pb-2');
-                                bookingItem.innerHTML = `
-                                <p><strong>Name:</strong> ${booking.user_name}</p>
-                                <p><strong>Email:</strong> ${booking.user_email}</p>
-                                <p><strong>Telephone:</strong> ${booking.tickets_booked}</p>
-                                <p><strong>Booked On:</strong> ${new Date(booking.created_at).toLocaleString()}</p>
-                            `;
-                                bookingsList.appendChild(bookingItem);
-                            });
-                        } else {
-                            bookingsList.innerHTML = '<p>No bookings yet for this event.</p>';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching bookings:', error);
-                        bookingsList.innerHTML = '<p>Error loading bookings. Please try again later.</p>';
-                    });
-            });
-        });
+                // Create a booking card
+                const bookingItem = document.createElement("div");
+                bookingItem.classList.add(
+                    "mb-4",
+                    "p-4",
+                    "border",
+                    "border-gray-300",
+                    "rounded-lg",
+                    "shadow-sm"
+                );
+                bookingItem.innerHTML = `
+                    <p><strong>Name:</strong> ${booking.user_name}</p>
+                    <p><strong>Email:</strong> ${booking.user_email}</p>
+                    <p><strong>Phone:</strong> ${booking.tickets_booked}</p>
+                    <p><strong>Booked On:</strong> ${new Date(
+                        booking.created_at
+                    ).toLocaleString()}</p>
+                `;
+                bookingsList.appendChild(bookingItem);
+            }
+        } else {
+            bookingsList.innerHTML = "<p>No bookings yet for this event.</p>";
+        }
 
-        // Close the modal when the close button is clicked
-        closeModalBtn.addEventListener('click', function() {
-            bookingsModal.classList.add('hidden');
+        // Update pagination controls
+        currentPageSpan.textContent = `Page ${currentPage}`;
+        prevPageBtn.disabled = currentPage === 1;
+        nextPageBtn.disabled = endIndex >= bookings.length;
+    };
+
+    // Event listener for "See Bookings" button
+    seeBookingsBtn.forEach((button) => {
+        button.addEventListener("click", function () {
+            const eventId = this.getAttribute("data-event-id");
+
+            // Show the modal
+            bookingsModal.classList.remove("hidden");
+
+            // Fetch bookings for the event
+            fetch(`/events/${eventId}/bookings`)
+                .then((response) => response.json())
+                .then((data) => {
+                    bookings = data.bookings || [];
+                    currentPage = 1;
+
+                    // Update the modal title with the event name
+                    eventTitle.textContent = `Bookings for Event: ${data.event.title}`;
+
+                    // Render bookings for the first page
+                    renderBookings();
+                })
+                .catch((error) => {
+                    console.error("Error fetching bookings:", error);
+                    bookingsList.innerHTML =
+                        "<p>Error loading bookings. Please try again later.</p>";
+                });
         });
     });
+
+    // Close the modal
+    closeModalBtn.addEventListener("click", function () {
+        bookingsModal.classList.add("hidden");
+    });
+
+    // Pagination controls
+    prevPageBtn.addEventListener("click", () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderBookings();
+        }
+    });
+
+    nextPageBtn.addEventListener("click", () => {
+        if (currentPage * itemsPerPage < bookings.length) {
+            currentPage++;
+            renderBookings();
+        }
+    });
+});
+
 </script>
