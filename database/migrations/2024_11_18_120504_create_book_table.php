@@ -24,8 +24,7 @@ return new class extends Migration
 
             // Define the foreign key constraint
             $table->foreign('id_event')->references('id')->on('events')->onDelete('cascade'); 
-            
-            $table->foreign('id_event')->references('id')->on('events')->onDelete('cascade');         
+                  
             $table->timestamps();
         });
     }
