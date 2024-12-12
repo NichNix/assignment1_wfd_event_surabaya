@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Midtrans\Config;
 use Midtrans\Snap;
+use Illuminate\Support\Facades\Log;
 
 class BookingController extends Controller
 {
@@ -105,6 +106,18 @@ class BookingController extends Controller
         // Dapatkan token Snap
         $snapToken = Snap::getSnapToken($params);
 
+        // AWS SNS command parameters
+        $topicArn = 'arn:aws:sns:us-east-1:338396772458:BookingReceipts'; // Update with your topic ARN
+        $message = "Dear {$booking->nama},\n\nYour booking has been successfully processed.\n\nEvent: {$booking->event->name}\nBooking ID: {$booking->id}\nStatus: Paid";
+        $subject = "Booking Confirmation - Payment Successful";
+
+        // Run the AWS CLI command to publish the message to SNS
+        $command = "aws sns publish --topic-arn {$topicArn} --message \"{$message}\" --subject \"{$subject}\"";
+
+        // Execute the command via shell_exec()
+        $output = shell_exec($command);
+        Log::info("SNS Output: " . $output);
+
         return view('bookings.payment', [
             'snapToken' => $snapToken,
             'booking' => $booking,
@@ -151,14 +164,28 @@ class BookingController extends Controller
         return view('adminbook.edit', compact('booking'));
     }
 
-    public function sendPaymentSuccessEmail($id)
-    {
+    public function sendPaymentSuccessEmail($id){
         $booking = Book::findOrFail($id);
         $booking->update(['status_bayar' => 'paid']);
 
         // Set session flag
         session(['payment_success' => true]);
 
+        // AWS SNS command parameters
+        $topicArn = 'arn:aws:sns:us-east-1:338396772458:BookingReceipts'; // Update with your topic ARN
+        $message = "Dear {$booking->nama},\n\nYour booking has been successfully processed.\n\nEvent: {$booking->event->name}\nBooking ID: {$booking->id}\nStatus: Paid";
+        $subject = "Booking Confirmation - Payment Successful";
+
+        // Run the AWS CLI command to publish the message to SNS
+        $command = "aws sns publish --topic-arn {$topicArn} --message \"{$message}\" --subject \"{$subject}\"";
+
+        // Execute the command via shell_exec()
+        $output = shell_exec($command);
+
+        // Log the output for debugging (optional)
+        Log::info("SNS Output: " . $output);
+
+        // Redirect to the payment success page
         return redirect()->route('payment.success', $booking->id);
     }
     public function update(Request $request, $id)
