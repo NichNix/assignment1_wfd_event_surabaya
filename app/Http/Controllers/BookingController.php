@@ -108,7 +108,7 @@ class BookingController extends Controller
 
         // AWS SNS command parameters
         $topicArn = 'arn:aws:sns:us-east-1:338396772458:BookingReceipts'; // Update with your topic ARN
-        $message = "Dear {$booking->nama},\n\nYour booking has been successfully processed.\n\nEvent: {$booking->event->name}\nBooking ID: {$booking->id}\nStatus: Paid";
+        $message = "Dear {$booking->nama},\n\nYour booking has been successfully processed.\n\nEvent: {$booking->event->title}\nBooking ID: {$booking->id}\nStatus: Paid\nUnique Code: 8AD123J\n\nShow your the Unique Code and Booking ID to the Venue Officers to claim your ticket.";
         $subject = "Booking Confirmation - Payment Successful";
 
         // Run the AWS CLI command to publish the message to SNS

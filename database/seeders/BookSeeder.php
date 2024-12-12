@@ -14,7 +14,7 @@ class BookSeeder extends Seeder
         
         // Insert 20 dummy records into the 'books' table
         $books = [];
-        for ($i = 0; $i < 80; $i++) {
+        for ($i = 0; $i < 110; $i++) {
             $eventId = rand(1, 10);  // Define the $eventId for each book record
 
             $books[] = [
