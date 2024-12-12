@@ -18,6 +18,44 @@ return [
         'passwords' => 'users',
     ],
 
+    'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+
+        'organizer' => [
+            'driver' => 'session',
+            'provider' => 'organizers', // Make sure this matches your provider below
+        ],
+
+        // Other guards...
+    ],
+
+
+    'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
+
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,  // Ensure this is your Admin model
+        ],
+
+        'organizers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Organizer::class, // The Organizer model
+        ],
+    ],
+
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
@@ -35,12 +73,6 @@ return [
     |
     */
 
-    'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -59,17 +91,7 @@ return [
     |
     */
 
-    'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
-        ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
-    ],
 
     /*
     |--------------------------------------------------------------------------

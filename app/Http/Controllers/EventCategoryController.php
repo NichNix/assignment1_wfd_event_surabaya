@@ -13,6 +13,10 @@ class EventCategoryController extends Controller
         return view('categories.index', compact('categories'));
     }
 
+    public function __construct()
+    {
+        $this->middleware('prevent.cache'); // Apply the prevent cache middleware
+    }
 
     public function create()
     {
